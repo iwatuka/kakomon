@@ -125,7 +125,10 @@
   }
 
   .item.has-rate {
-    padding-right: 105px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-right: 40px;
   }
 
   .item-label {
@@ -134,12 +137,8 @@
   }
 
   .item-rate {
-    position: absolute;
-    right: 38px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
-    font-size: 13px;
+    color: #333333;
+    font-size: 0.7em;
     font-weight: 400;
     white-space: nowrap;
   }
