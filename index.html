@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>過去問分析</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="data.js"></script>
+</head>
+<body>
+
+<div class="app">
+  <div class="topbar">
+    <button class="back" id="backButton">← 戻る</button>
+    <h1 id="title">教科</h1>
+  </div>
+
+  <div class="breadcrumb" id="breadcrumb"></div>
+
+  <div id="content"></div>
+</div>
+
+<script>
+/*
+=========================================================
+ここにデータを書き込むだけでサイトに反映されます。
+
+構造:
+教科
+ └ 大学
+    └ 年度
+       ├ 受験日
+       ├ 年度コメント
+       └ 大問
+          ├ 点数
+          ├ 満点
+          ├ できなかったこと
+          └ 何ができれば解けたか
+=========================================================
+*/
+
+/* 以下は表示用 */
+
+
+
+
+/* 以下は表示用。基本的に触らなくてOKです。 */
+
+const content = document.getElementById("content");
+const title = document.getElementById("title");
+const breadcrumb = document.getElementById("breadcrumb");
+const backButton = document.getElementById("backButton");
+
+let path = [];
+
+function getCurrentData() {
+  let current = DATA;
+  for (const key of path) {
+    current = current[key];
+  }
+  return current;
+}
+
+function render() {
+  const current = getCurrentData();
+
+  backButton.style.display = path.length ? "inline-block" : "none";
+  breadcrumb.textContent = path.join("  /  ");
+
+  if (path.length === 0) {
+    title.textContent = "教科";
+    renderHomePage(current);
+    return;
+  }
+
+  if (path.length === 1) {
+    title.textContent = "大学";
+    renderUniversityPage(current);
+    return;
+  }
+
+  if (path.length === 2) {
+    title.textContent = "年度";
+    renderList(current);
+    return;
+  }
+
+  if (path.length === 3) {
+    title.textContent = "大問";
+    renderYearPage(current);
+    return;
+  }
+
+  if (path.length === 4) {
+    title.textContent = path[path.length - 1];
+    renderDetail(current);
+  }
+}
+
+
+function renderHomePage(data) {
+  const wrapper = document.createElement("div");
+
+  const list = document.createElement("div");
+  list.className = "list";
+
+  Object.keys(data)
+    .filter(key => !key.startsWith("_"))
+    .forEach(key => {
+      const button = document.createElement("button");
+      button.className = "item";
+      button.textContent = "− " + key;
+
+      button.addEventListener("click", () => {
+        path.push(key);
+        render();
+      });
+
+      list.appendChild(button);
+    });
+
+  wrapper.appendChild(list);
+
+  content.innerHTML = "";
+  content.appendChild(wrapper);
+}
+
+function renderList(obj) {
+  const keys = Object.keys(obj).filter(key => !key.startsWith("_"));
+
+  if (!keys.length) {
+    content.innerHTML = '<div class="empty">データがありません。</div>';
+    return;
+  }
+
+  const list = document.createElement("div");
+  list.className = "list";
+
+  keys.forEach(key => {
+    const button = document.createElement("button");
+    button.className = "item";
+    button.textContent = "− " + key;
+
+    button.addEventListener("click", () => {
+      path.push(key);
+      render();
+    });
+
+    list.appendChild(button);
+  });
+
+  content.innerHTML = "";
+  content.appendChild(list);
+}
+
+
+
+function renderUniversityPage(subjectData) {
+  const universityNames = Object.keys(subjectData).filter(key => !key.startsWith("_"));
+
+  const wrapper = document.createElement("div");
+
+  const listLabel = document.createElement("div");
+  listLabel.className = "section-label";
+  listLabel.textContent = "大学を選択";
+  wrapper.appendChild(listLabel);
+
+  const list = document.createElement("div");
+  list.className = "list";
+
+  universityNames.forEach(key => {
+    const button = document.createElement("button");
+    button.className = "item";
+    button.textContent = "− " + key;
+
+    button.addEventListener("click", () => {
+      path.push(key);
+      render();
+    });
+
+    list.appendChild(button);
+  });
+
+  wrapper.appendChild(list);
+  content.innerHTML = "";
+  content.appendChild(wrapper);
+}
+
+function renderYearPage(yearData) {
+  const questionKeys = Object.keys(yearData).filter(key => !key.startsWith("_"));
+
+  let totalScore = 0;
+  let totalMax = 0;
+
+  questionKeys.forEach(key => {
+    const q = yearData[key];
+    totalScore += Number(q.score || 0);
+    totalMax += Number(q.maxScore || 0);
+  });
+
+  const rate = totalMax ? (totalScore / totalMax * 100) : 0;
+
+  const wrapper = document.createElement("div");
+
+  wrapper.innerHTML = `
+    <div class="year-summary">
+      <div class="year-summary-row">
+        <div class="year-summary-label">受験日</div>
+        <div class="detail-value">${escapeHTML(yearData._date || "未記入")}</div>
+      </div>
+
+      <div class="year-summary-row">
+        <div class="year-summary-label">全体</div>
+        <div class="year-summary-score">
+          ${escapeHTML(totalScore)} / ${escapeHTML(totalMax)}
+          <span style="font-size:15px;font-weight:400;color:#777;">
+            （${rate.toFixed(1)}%）
+          </span>
+        </div>
+      </div>
+
+      <div class="year-summary-row">
+        <div class="year-summary-label">コメント</div>
+        <div class="year-comment">
+          ${escapeHTML(yearData._comment || "コメントなし")}
+        </div>
+      </div>
+    </div>
+  `;
+
+  const list = document.createElement("div");
+  list.className = "list";
+
+  if (!questionKeys.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "大問データがありません。";
+    list.appendChild(empty);
+  } else {
+    questionKeys.forEach(key => {
+      const q = yearData[key];
+      const button = document.createElement("button");
+      button.className = "item";
+      button.textContent = "− " + key + "　" + q.score + "/" + q.maxScore;
+
+      button.addEventListener("click", () => {
+        path.push(key);
+        render();
+      });
+
+      list.appendChild(button);
+    });
+  }
+
+  wrapper.appendChild(list);
+  content.innerHTML = "";
+  content.appendChild(wrapper);
+}
+
+function renderDetail(data) {
+  const rate = data.maxScore
+    ? Math.round((data.score / data.maxScore) * 100)
+    : 0;
+
+  content.innerHTML = `
+    <div class="detail">
+      <div class="detail-row">
+        <div class="detail-label">点数</div>
+        <div class="detail-value score">
+          ${escapeHTML(data.score)} / ${escapeHTML(data.maxScore)}
+          <span style="font-size:15px;font-weight:400;color:#777;">（${rate}%）</span>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">どこができなかったか</div>
+        <div class="detail-value">${escapeHTML(data.failed || "記録なし")}</div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">何ができれば解けたか</div>
+        <div class="detail-value">${escapeHTML(data.needed || "記録なし")}</div>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHTML(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+backButton.addEventListener("click", () => {
+  path.pop();
+  render();
+});
+
+render();
+</script>
+
+</body>
+</html>
