@@ -124,6 +124,26 @@
     background: #f4f4f4;
   }
 
+  .item.has-rate {
+    padding-right: 105px;
+  }
+
+  .item-label {
+    display: block;
+    overflow-wrap: anywhere;
+  }
+
+  .item-rate {
+    position: absolute;
+    right: 38px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 13px;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
   .year-summary,
   .detail {
     border-top: 1px solid #dddddd;
