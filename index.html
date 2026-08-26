@@ -178,7 +178,7 @@ function renderList(obj) {
   keys.forEach(key => {
     const button = document.createElement("button");
     button.className = "item";
-    setItemContent(button, key, formatRate(getYearRate(obj[key])));
+    setItemContent(button, key, formatRate(getYearRate(obj[key]), "約 "));
 
     button.addEventListener("click", () => {
       path.push(key);
