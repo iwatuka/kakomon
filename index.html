@@ -125,6 +125,45 @@ function renderHomePage(data) {
   content.appendChild(wrapper);
 }
 
+function getYearRate(yearData) {
+  let totalScore = 0;
+  let totalMaxScore = 0;
+
+  Object.keys(yearData)
+    .filter(key => !key.startsWith("_"))
+    .forEach(key => {
+      const question = yearData[key];
+      const hasScore = question.score !== "" && question.score != null;
+      const hasMaxScore = question.maxScore !== "" && question.maxScore != null;
+      const score = Number(question.score);
+      const maxScore = Number(question.maxScore);
+
+      if (hasScore && hasMaxScore && Number.isFinite(score) && Number.isFinite(maxScore) && maxScore > 0) {
+        totalScore += score;
+        totalMaxScore += maxScore;
+      }
+    });
+
+  return totalMaxScore > 0 ? totalScore / totalMaxScore * 10 : null;
+}
+
+function formatRate(rate, prefix = "") {
+  return rate === null ? "未入力" : `${prefix}${rate.toFixed(1)}割`;
+}
+
+function setItemContent(button, label, rateText) {
+  const labelElement = document.createElement("span");
+  labelElement.className = "item-label";
+  labelElement.textContent = "− " + label;
+
+  const rateElement = document.createElement("span");
+  rateElement.className = "item-rate";
+  rateElement.textContent = rateText;
+
+  button.classList.add("has-rate");
+  button.append(labelElement, rateElement);
+}
+
 function renderList(obj) {
   const keys = Object.keys(obj).filter(key => !key.startsWith("_"));
 
@@ -139,7 +178,7 @@ function renderList(obj) {
   keys.forEach(key => {
     const button = document.createElement("button");
     button.className = "item";
-    button.textContent = "− " + key;
+    setItemContent(button, key, formatRate(getYearRate(obj[key])));
 
     button.addEventListener("click", () => {
       path.push(key);
@@ -171,7 +210,16 @@ function renderUniversityPage(subjectData) {
   universityNames.forEach(key => {
     const button = document.createElement("button");
     button.className = "item";
-    button.textContent = "− " + key;
+
+    const yearRates = Object.keys(subjectData[key])
+      .filter(year => !year.startsWith("_"))
+      .map(year => getYearRate(subjectData[key][year]))
+      .filter(rate => rate !== null);
+    const averageRate = yearRates.length
+      ? yearRates.reduce((sum, rate) => sum + rate, 0) / yearRates.length
+      : null;
+
+    setItemContent(button, key, formatRate(averageRate, "平均 "));
 
     button.addEventListener("click", () => {
       path.push(key);
