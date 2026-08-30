@@ -1,44 +1,7 @@
 const DATA = {
   "数学": {
 
-    
-    "順天堂大学": {
-      "2021年": {
-        "_comment": "",
-        "_date": "",
-
-        "大問1": {
-          score: "",
-          maxScore: "",
-          failed: "",
-          needed: ""
-        }
-      },
-      "2022年": {
-        "_comment": "",
-        "_date": "",
-
-        "大問1": {
-          score: "",
-          maxScore: "",
-          failed: "",
-          needed: ""
-        }
-      },
-      "2023年": {
-        "_comment": "",
-        "_date": "",
-
-        "大問1": {
-          score: "",
-          maxScore: "",
-          failed: "",
-          needed: ""
-        }
-      }
-    },
-
-    
+  
     "慈恵": {
       "2021年": {
         "_comment": "大問3ができない。",
@@ -131,41 +94,7 @@ const DATA = {
         }
       },
     },
-    "日本医科大": {
-      "2021年": {
-        "_comment": "",
-        "_date": "",
-
-        "大問1": {
-          score: "",
-          maxScore: "",
-          failed: "",
-          needed: ""
-        }
-      },
-      "2022年": {
-        "_comment": "",
-        "_date": "",
-
-        "大問1": {
-          score: "",
-          maxScore: "",
-          failed: "",
-          needed: ""
-        }
-      },
-      "2023年": {
-        "_comment": "",
-        "_date": "",
-
-        "大問1": {
-          score: "",
-          maxScore: "",
-          failed: "",
-          needed: ""
-        }
-      }
-    }
+   
   },
 
   "英語": {
