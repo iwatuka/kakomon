@@ -171,40 +171,7 @@ const DATA = {
     }
   },
 
-  "自治医科大学": {
-    "2020年": {
-      "_comment": "",
-      "_date": "2026-10-27",
 
-      "大問1": {
-        score: "",
-        maxScore: "",
-        failed: "",
-        needed: ""
-      },
-
-      "大問2": {
-        score: "",
-        maxScore: "",
-        failed: "",
-        needed: ""
-      },
-
-      "大問3": {
-        score: "",
-        maxScore: "",
-        failed: "",
-        needed: ""
-      },
-
-      "大問4": {
-        score: "",
-        maxScore: "",
-        failed: "",
-        needed: ""
-      }
-    }
-  },
 
   "順天": {
     "2020年": {
@@ -338,6 +305,50 @@ const DATA = {
       }
     }
   }
+
+    "自治医科大学": {
+    "2021年": {
+      "_comment": "本当は満点とるべき過去問",
+      "_date": "2026-11-2",
+
+      "p1~2": {
+        score: "24",
+        maxScore: "24",
+        failed: "",
+        needed: ""
+      },
+
+      "p3~4": {
+        score: "4",
+        maxScore: "24",
+        failed: "時間無制限だと8/24。内接円の半径と三角形の面積の関係とか、ただ微分して増減表書けば解ける問題に気づけなかったり",
+        needed: "落ち着いて確実に解くことと、公式を暗記するのと、最大最小求めるときは微分を疑うこと"
+      },
+
+      "p5~6": {
+        score: "20",
+        maxScore: "24",
+        failed: "一問積分解けなかったけど、時間無制限では解けた",
+        needed: "三角関数の置換積分"
+      },
+
+      "p7~9": {
+        score: "24",
+        maxScore: "28",
+        failed: "ミス",
+        needed: ""
+      }
+
+       "二時試験": {
+        score: "100",
+        maxScore: "100",
+        failed: "",
+        needed: ""
+      }
+    }
+  }
+
+
 },
 
   "英語": {
