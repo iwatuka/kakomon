@@ -337,14 +337,14 @@ const DATA = {
         maxScore: "28",
         failed: "ミス",
         needed: ""
-      }
+      },
 
-       "二時試験": {
+       "二次試験": {
         score: "100",
         maxScore: "100",
         failed: "",
         needed: ""
-      }
+      },
     }
   }
 
